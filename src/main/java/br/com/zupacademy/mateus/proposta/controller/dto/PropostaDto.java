@@ -1,6 +1,7 @@
 package br.com.zupacademy.mateus.proposta.controller.dto;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Positive;
 import org.hibernate.validator.constraints.br.CPF;
 
 import br.com.zupacademy.mateus.proposta.model.Proposta;
+import br.com.zupacademy.mateus.proposta.repository.PropostaRepository;
 
 public class PropostaDto {
 	
@@ -45,6 +47,33 @@ public class PropostaDto {
 		
 		return new Proposta(this.documento, this.email,this.nome, this.endereco, this.salario);
 	}
-	
+
+	public boolean documentoIsUnique(PropostaRepository propostaRepository) {
+		Optional<Proposta> prop = propostaRepository.findByDocumento(documento);
+		if(prop.isPresent()) {
+			return false;
+		}
+		return true;
+	}
+
+	public String getDocumento() {
+		return documento;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public BigDecimal getSalario() {
+		return salario;
+	}
 	
 }
