@@ -5,12 +5,12 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.zupacademy.mateus.proposta.model.Proposta;
+import br.com.zupacademy.mateus.proposta.model.Usuario;
 
 
 @Repository
-public interface PropostaRepository extends CrudRepository<Proposta,Long>{
+public interface UsuarioRepository extends CrudRepository<Usuario,Long>{
 	
 	
-	Optional<Proposta> findByDocumento(String documento);
+	Optional<Usuario> findByDocumento(String documento);
 }
