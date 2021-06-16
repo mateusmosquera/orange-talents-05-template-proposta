@@ -1,8 +1,10 @@
 package br.com.zupacademy.mateus.proposta.controller;
 
 import java.net.URI;
+import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import br.com.zupacademy.mateus.proposta.Client.CartoesClient;
 import br.com.zupacademy.mateus.proposta.Client.PropostaClient;
@@ -58,6 +60,17 @@ public class PropostaController {
 		URI uri = uriBuilder.path("/proposta/{id}").buildAndExpand(newProp.getId()).toUri();
 
 		return ResponseEntity.created(uri).body(propostaDto);
+	}
+
+	@GetMapping
+	public ResponseEntity<Proposta> consultar(@PathParam("id") Long id){
+
+		Optional<Proposta> optProposta = propostaRepository.findById(id);
+
+		if(optProposta.isEmpty()){
+			throw new ApiErroException(HttpStatus.NOT_FOUND, "Proposta não encontrada");
+		}
+		return ResponseEntity.ok(optProposta.get());
 	}
 
 }
