@@ -10,10 +10,10 @@ import javax.validation.constraints.Positive;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import br.com.zupacademy.mateus.proposta.model.Usuario;
-import br.com.zupacademy.mateus.proposta.repository.UsuarioRepository;
+import br.com.zupacademy.mateus.proposta.model.Proposta;
+import br.com.zupacademy.mateus.proposta.repository.PropostaRepository;
 
-public class UsuarioDto {
+public class PropostaDto {
 	
 	@CPF
 	@NotBlank
@@ -35,7 +35,7 @@ public class UsuarioDto {
 	
 	
 
-	public UsuarioDto(@CPF @NotBlank String documento, @Email @NotBlank String email, @NotBlank String nome,
+	public PropostaDto(@CPF @NotBlank String documento, @Email @NotBlank String email, @NotBlank String nome,
 			@NotBlank String endereco, @NotNull @Positive BigDecimal salario) {
 		super();
 		this.documento = documento;
@@ -45,13 +45,13 @@ public class UsuarioDto {
 		this.salario = salario;
 	}
 
-	public Usuario toModel() {
+	public Proposta toModel() {
 		
-		return new Usuario(this.documento, this.email,this.nome, this.endereco, this.salario);
+		return new Proposta(this.documento, this.email,this.nome, this.endereco, this.salario);
 	}
 
-	public boolean documentoIsUnique(UsuarioRepository UsuarioRepository) {
-		Optional<Usuario> user = UsuarioRepository.findByDocumento(documento);
+	public boolean documentoIsUnique(PropostaRepository PropostaRepository) {
+		Optional<Proposta> user = PropostaRepository.findByDocumento(documento);
 		if(user.isPresent()) {
 			return false;
 		}

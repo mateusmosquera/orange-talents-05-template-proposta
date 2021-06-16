@@ -5,8 +5,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import br.com.zupacademy.mateus.proposta.model.Usuario;
-
 public class SolicitacaoAnalise{
 
 	@CPF

@@ -20,7 +20,7 @@ import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoAnalise;
 import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoResponse;
 
 @Entity
-public class Usuario {
+public class Proposta {
 	
 	
 	@Id
@@ -47,12 +47,14 @@ public class Usuario {
 	
 	private SituacaoFinanceira situacaoFinanceira;
 	
+	private String idCartao;
+	
 	@Deprecated
-	public Usuario() {
+	public Proposta() {
 		
 	}
 
-	public Usuario(@CPF @NotBlank String documento, @Email @NotBlank String email, @NotBlank String nome,@NotBlank String endereco,
+	public Proposta(@CPF @NotBlank String documento, @Email @NotBlank String email, @NotBlank String nome,@NotBlank String endereco,
 			@NotNull @Positive BigDecimal salario) {
 		super();
 		this.documento = documento;
@@ -66,6 +68,10 @@ public class Usuario {
 		return id;
 	}
 
+	public String getNome() {
+		return nome;
+	}
+
 	public String getDocumento() {
 		return documento;
 	}
@@ -74,20 +80,32 @@ public class Usuario {
 		return salario;
 	}
 	
-	public void alocarDadosFinanceiros(RestTemplate restTemplate) {
-		String url = "http://localhost:9999/api/solicitacao";
-		
-		SolicitacaoAnalise solicitanteAnalise = new SolicitacaoAnalise(this.documento,this.nome,this.id);
-		
-		SolicitacaoResponse solicResponse = restTemplate.postForObject(url, solicitanteAnalise, SolicitacaoResponse.class);
-		
-		if(solicResponse.getResultadoSolicitacao().equals("COM_RESTRICAO") ) {
+	public SituacaoFinanceira getSituacaoFinanceira() {
+		return situacaoFinanceira;
+	}
+
+	public void setIdCartao(String idCartao) {
+		this.idCartao = idCartao;
+	}
+
+	public void alocarDadosFinanceiros(String resultadoSolicitacao) {
+		if(resultadoSolicitacao.equals("COM_RESTRICAO") ) {
 			this.situacaoFinanceira = SituacaoFinanceira.NAO_ELEGIVEL;
 		}
-		else if(solicResponse.getResultadoSolicitacao().equals("SEM_RESTRICAO") ) {
+		else if(resultadoSolicitacao.equals("SEM_RESTRICAO") ) {
 			this.situacaoFinanceira = SituacaoFinanceira.ELEGIVEL;
 		}else {
-			throw new ApiErroException(HttpStatus.PRECONDITION_FAILED,"Resultado não esperado: "+ solicResponse.getResultadoSolicitacao());
+			throw new ApiErroException(HttpStatus.PRECONDITION_FAILED,"Resultado não esperado: "+ resultadoSolicitacao);
 		}
-	}	
+	}
+
+	public void associarCartao(RestTemplate restTemplate) {
+		String url = "http://localhost:8888/api/cartoes?idProposta="+this.id;
+
+		Cartao cartaoAssociado = restTemplate.getForObject(url,Cartao.class);
+
+		this.idCartao = cartaoAssociado.getId();
+
+	}
+
 }
