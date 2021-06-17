@@ -1,6 +1,7 @@
 package br.com.zupacademy.mateus.proposta.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -12,9 +13,9 @@ public class Cartao {
 	@Id
 	@NotBlank
 	private String id;
-
+	@NotNull @NotBlank
 	private String emitidoEm;
-
+	@NotNull @NotBlank
 	private String titular;
 	@OneToMany
 	private List<Bloqueio> bloqueios;
@@ -35,6 +36,8 @@ public class Cartao {
 	private Vencimento vencimento;
 	@NotNull
 	private long idProposta;
+	@OneToMany
+	private Set<Biometria> biometria;
 
 	@Deprecated
 	public Cartao(){
@@ -100,6 +103,11 @@ public class Cartao {
 	public long getIdProposta() {
 		return idProposta;
 	}
+
+	public Set<Biometria> getBiometria() {
+		return biometria;
+	}
+
 }
 
 
