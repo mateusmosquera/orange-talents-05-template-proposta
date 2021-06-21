@@ -2,19 +2,20 @@ package br.com.zupacademy.mateus.proposta.controller;
 
 import br.com.zupacademy.mateus.proposta.config.exceptions.ApiErroException;
 import br.com.zupacademy.mateus.proposta.controller.dto.BiometriaDto;
+import br.com.zupacademy.mateus.proposta.controller.dto.BloqueioDto;
 import br.com.zupacademy.mateus.proposta.model.Biometria;
+import br.com.zupacademy.mateus.proposta.model.Bloqueio;
 import br.com.zupacademy.mateus.proposta.model.Cartao;
 import br.com.zupacademy.mateus.proposta.repository.BiometriaRepository;
+import br.com.zupacademy.mateus.proposta.repository.BloqueioRepository;
 import br.com.zupacademy.mateus.proposta.repository.CartaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.net.URI;
@@ -30,6 +31,9 @@ public class CartaoController {
     @Autowired
     private BiometriaRepository biometriaRepository;
 
+    @Autowired
+    private BloqueioRepository bloqueioRepository;
+
     @PostMapping
     @RequestMapping("/biometria")
     public ResponseEntity<?> cadastrarBiometria(@PathParam("id") String id, @RequestBody @Valid BiometriaDto biometriaDto,
@@ -37,7 +41,7 @@ public class CartaoController {
 
         Optional<Cartao> optCartao = cartaoRepository.findById(id);
 
-        if(!optCartao.isPresent()){
+        if(optCartao.isEmpty()){
             throw new ApiErroException(HttpStatus.NOT_FOUND, "Não foi encontrado o cartão");
         }
 
@@ -46,6 +50,36 @@ public class CartaoController {
         optCartao.get().getBiometria().add(biometria);
 
         biometriaRepository.save(biometria);
+        cartaoRepository.save(optCartao.get());
+
+        URI uri = uriBuilder.path("/cartao/{id}").buildAndExpand(optCartao.get()).toUri();
+
+        return ResponseEntity.created(uri).build();
+    }
+
+    @PostMapping
+    @RequestMapping("/bloqueio")
+    public ResponseEntity<?> bloquear(@PathParam("id") String id, @RequestHeader(value = "User-Agent") String userAgent, @RequestBody @Valid BloqueioDto bloqueiodto,
+                                      UriComponentsBuilder uriBuilder, HttpServletRequest request){
+        Optional<Cartao> optCartao = cartaoRepository.findById(id);
+
+        if(optCartao.isEmpty()){
+            throw new ApiErroException(HttpStatus.NOT_FOUND, "Não foi encontrado o cartão");
+        }
+        if(optCartao.get().getBloqueios() != null){
+            throw new ApiErroException(HttpStatus.UNPROCESSABLE_ENTITY, "Cartão já tem bloqueio");
+        }
+
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null) {
+            ipAddress = request.getRemoteAddr();
+        }
+
+        Bloqueio bloqueio = bloqueiodto.toModel(ipAddress,userAgent);
+
+        optCartao.get().setBloqueio(bloqueio);
+
+        bloqueioRepository.save(bloqueio);
         cartaoRepository.save(optCartao.get());
 
         URI uri = uriBuilder.path("/cartao/{id}").buildAndExpand(optCartao.get()).toUri();

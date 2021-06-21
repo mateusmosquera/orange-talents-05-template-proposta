@@ -1,5 +1,7 @@
 package br.com.zupacademy.mateus.proposta.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -17,14 +19,15 @@ public class Cartao {
 	private String emitidoEm;
 	@NotNull @NotBlank
 	private String titular;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "bloqueio_id", referencedColumnName = "id")
+	private Bloqueio bloqueio;
 	@OneToMany
-	private List<Bloqueio> bloqueios;
+	private Collection<AvisoViagem> avisos = new ArrayList<>();
 	@OneToMany
-	private List<AvisoViagem> avisos;
+	private Collection<CarteiraDigital> carteiras = new ArrayList<>();
 	@OneToMany
-	private List<CarteiraDigital> carteiras;
-	@OneToMany
-	private List<Parcela> parcelas;
+	private Collection<Parcela> parcelas = new ArrayList<>();
 	
 	private int limite;
 	@OneToOne(cascade = CascadeType.ALL)
@@ -43,14 +46,14 @@ public class Cartao {
 	public Cartao(){
 	}
 
-	public Cartao(@NotBlank String id, @NotBlank String emitidoEm, @NotBlank String titular, List<Bloqueio> bloqueios,
+	public Cartao(@NotBlank String id, @NotBlank String emitidoEm, @NotBlank String titular, Bloqueio bloqueio,
 			List<AvisoViagem> avisos, List<CarteiraDigital> carteiras, List<Parcela> parcelas, int limite,
 			Renegociacao renegociao, Vencimento vencimento, long idProposta) {
 		super();
 		this.id = id;
 		this.emitidoEm = emitidoEm;
 		this.titular = titular;
-		this.bloqueios = bloqueios;
+		this.bloqueio = bloqueio;
 		this.avisos = avisos;
 		this.carteiras = carteiras;
 		this.parcelas = parcelas;
@@ -72,19 +75,19 @@ public class Cartao {
 		return titular;
 	}
 
-	public List<Bloqueio> getBloqueios() {
-		return bloqueios;
+	public Bloqueio getBloqueios() {
+		return bloqueio;
 	}
 
-	public List<AvisoViagem> getAvisos() {
+	public Collection<AvisoViagem> getAvisos() {
 		return avisos;
 	}
 
-	public List<CarteiraDigital> getCarteiras() {
+	public Collection<CarteiraDigital> getCarteiras() {
 		return carteiras;
 	}
 
-	public List<Parcela> getParcelas() {
+	public Collection<Parcela> getParcelas() {
 		return parcelas;
 	}
 
@@ -108,6 +111,9 @@ public class Cartao {
 		return biometria;
 	}
 
+	public void setBloqueio(Bloqueio bloqueio) {
+		this.bloqueio = bloqueio;
+	}
 }
 
 

@@ -1,25 +1,39 @@
 package br.com.zupacademy.mateus.proposta.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Bloqueio {
 	@Id
-	private String id;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@NotBlank
 	private String bloqueadoEm;
-	
+	@NotBlank
 	private String sistemaResponsavel;
+	@NotBlank
+	private String ipCLient;
+	@NotBlank
+	private String userAgent;
 
-	public Bloqueio(String id, String bloqueadoEm, String sistemaResponsavel) {
-		super();
-		this.id = id;
-		this.bloqueadoEm = bloqueadoEm;
-		this.sistemaResponsavel = sistemaResponsavel;
+	@Deprecated
+	public Bloqueio(){
+
 	}
 
-	public String getId() {
+	public Bloqueio(String bloqueadoEm, String sistemaResponsavel, String ipCLient, String userAgent) {
+		this.bloqueadoEm = bloqueadoEm;
+		this.sistemaResponsavel = sistemaResponsavel;
+		this.ipCLient = ipCLient;
+		this.userAgent = userAgent;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
@@ -29,5 +43,13 @@ public class Bloqueio {
 
 	public String getSistemaResponsavel() {
 		return sistemaResponsavel;
+	}
+
+	public String getIpCLient() {
+		return ipCLient;
+	}
+
+	public String getUserAgent() {
+		return userAgent;
 	}
 }
