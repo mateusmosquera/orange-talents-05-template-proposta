@@ -12,6 +12,4 @@ public interface PropostaClient {
     @RequestMapping(method = RequestMethod.POST)
     SolicitacaoResponse solicitarDados(SolicitacaoAnalise solicitacaoAnalise);
 
-
-
 }
