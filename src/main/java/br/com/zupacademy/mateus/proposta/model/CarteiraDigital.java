@@ -2,6 +2,8 @@ package br.com.zupacademy.mateus.proposta.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class CarteiraDigital {
@@ -13,6 +15,10 @@ public class CarteiraDigital {
 	private String associadaEm;
 	
 	private String emissaor;
+
+	@ManyToOne
+	@JoinColumn(name="cartao_id", nullable=false)
+	private Cartao cartao;
 
 	public CarteiraDigital(String id, String email, String associadaEm, String emissaor) {
 		super();

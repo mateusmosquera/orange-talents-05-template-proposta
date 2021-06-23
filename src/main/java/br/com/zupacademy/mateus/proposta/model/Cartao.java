@@ -22,11 +22,12 @@ public class Cartao {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "bloqueio_id", referencedColumnName = "id")
 	private Bloqueio bloqueio;
-	@OneToMany
+
+	@OneToMany(mappedBy = "cartao")
 	private Collection<AvisoViagem> avisos = new ArrayList<>();
-	@OneToMany
+	@OneToMany(mappedBy = "cartao")
 	private Collection<CarteiraDigital> carteiras = new ArrayList<>();
-	@OneToMany
+	@OneToMany(mappedBy = "cartao")
 	private Collection<Parcela> parcelas = new ArrayList<>();
 	
 	private int limite;
@@ -39,7 +40,7 @@ public class Cartao {
 	private Vencimento vencimento;
 	@NotNull
 	private long idProposta;
-	@OneToMany
+	@OneToMany(mappedBy = "cartao")
 	private Set<Biometria> biometria;
 
 	@Deprecated
@@ -114,6 +115,7 @@ public class Cartao {
 	public void setBloqueio(Bloqueio bloqueio) {
 		this.bloqueio = bloqueio;
 	}
+
 }
 
 

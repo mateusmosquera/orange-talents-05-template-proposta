@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Parcela {
@@ -13,6 +15,10 @@ public class Parcela {
 	private int quantidade;
 	
 	private BigDecimal valor;
+
+	@ManyToOne
+	@JoinColumn(name="cartao_id", nullable=false)
+	private Cartao cartao;
 
 	public Parcela(String id, int quantidade, BigDecimal valor) {
 		super();

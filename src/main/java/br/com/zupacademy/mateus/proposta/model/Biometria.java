@@ -1,9 +1,6 @@
 package br.com.zupacademy.mateus.proposta.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -23,6 +20,10 @@ public class Biometria {
     @NotNull
     @PastOrPresent
     private LocalDateTime cadastroInstante;
+
+    @ManyToOne
+    @JoinColumn(name="cartao_id", nullable=false)
+    private Cartao cartao;
 
     @Deprecated
     public Biometria(){}
