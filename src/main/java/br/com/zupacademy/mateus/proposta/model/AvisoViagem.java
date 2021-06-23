@@ -1,7 +1,11 @@
 package br.com.zupacademy.mateus.proposta.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -9,13 +13,15 @@ public class AvisoViagem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	private String validoAte;
-	
+
+	@Future
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private LocalDate validoAte;
+	@NotBlank
 	private	String destino;
 
 	private LocalDateTime cadastroEm;
-
+	@NotBlank
 	private String ipCLient;
 
 	private String userAgent;
@@ -27,7 +33,7 @@ public class AvisoViagem {
 	@Deprecated
 	public AvisoViagem(){}
 
-	public AvisoViagem(String validoAte, String destino, String ipCLient, String userAgent,Cartao cartao) {
+	public AvisoViagem(LocalDate validoAte, String destino, String ipCLient, String userAgent,Cartao cartao) {
 		this.validoAte = validoAte;
 		this.destino = destino;
 		this.cadastroEm = LocalDateTime.now();;
@@ -40,7 +46,7 @@ public class AvisoViagem {
 		return id;
 	}
 
-	public String getValidoAte() {
+	public LocalDate getValidoAte() {
 		return validoAte;
 	}
 
