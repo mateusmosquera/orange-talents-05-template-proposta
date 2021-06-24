@@ -4,6 +4,7 @@ import br.com.zupacademy.mateus.proposta.Client.CartoesClient;
 import br.com.zupacademy.mateus.proposta.config.exceptions.ApiErroException;
 import br.com.zupacademy.mateus.proposta.controller.dto.CarteiraDigitalDto;
 import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoInclusaoCarteira;
+import br.com.zupacademy.mateus.proposta.model.AssociacaoCarteira;
 import br.com.zupacademy.mateus.proposta.model.Cartao;
 import br.com.zupacademy.mateus.proposta.model.CarteiraDigital;
 import br.com.zupacademy.mateus.proposta.repository.CartaoRepository;
@@ -13,10 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
 import javax.validation.Valid;
@@ -38,7 +36,11 @@ public class CarteiraDigitalController {
     private final Logger logger = LoggerFactory.getLogger(CarteiraDigitalController.class);
 
     @PostMapping
-    public ResponseEntity<?> incluirCarteira(@PathParam("id") String id,@RequestBody @Valid CarteiraDigitalDto carteiraDigitalDto ){
+    public ResponseEntity<?> incluirCarteira(@PathParam("id") String id, @RequestBody @Valid CarteiraDigitalDto carteiraDigitalDto ){
+
+        if(!verificarAssociacaoCartao(carteiraDigitalDto.getEmissor())){
+            throw new ApiErroException(HttpStatus.NOT_FOUND, "Não foi encontrada está relação de carteira digital");
+        }
 
         Optional<Cartao> optCartao = cartaoRepository.findById(id);
 
@@ -68,6 +70,15 @@ public class CarteiraDigitalController {
             throw e;
         }
         return ResponseEntity.ok().build();
+    }
+
+    public boolean verificarAssociacaoCartao(String carteira){
+        for(AssociacaoCarteira a : AssociacaoCarteira.values()){
+            if (a.name().equals(carteira)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
