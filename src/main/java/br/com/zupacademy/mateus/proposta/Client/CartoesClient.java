@@ -1,9 +1,6 @@
 package br.com.zupacademy.mateus.proposta.Client;
 
-import br.com.zupacademy.mateus.proposta.controller.dto.ResultadoBloqueio;
-import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoAnalise;
-import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoAvisoViagem;
-import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoBloqueio;
+import br.com.zupacademy.mateus.proposta.controller.dto.*;
 import br.com.zupacademy.mateus.proposta.model.Cartao;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,5 +23,9 @@ public interface CartoesClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/avisos")
     ResultadoBloqueio avisoViagem(@PathVariable("id") String id, SolicitacaoAvisoViagem solicitacaoAvisoViagem);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}/carteiras")
+    ResultadoCarteira incluirCarteira(@PathVariable("id") String id, SolicitacaoInclusaoCarteira solicitacaoInclusaoCarteira);
+
 
 }

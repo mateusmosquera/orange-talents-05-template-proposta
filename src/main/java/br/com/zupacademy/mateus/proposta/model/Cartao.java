@@ -25,8 +25,10 @@ public class Cartao {
 
 	@OneToMany(mappedBy = "cartao")
 	private Collection<AvisoViagem> avisos = new ArrayList<>();
+
 	@OneToMany(mappedBy = "cartao")
 	private Collection<CarteiraDigital> carteiras = new ArrayList<>();
+
 	@OneToMany(mappedBy = "cartao")
 	private Collection<Parcela> parcelas = new ArrayList<>();
 	

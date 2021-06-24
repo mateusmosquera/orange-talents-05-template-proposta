@@ -1,34 +1,39 @@
 package br.com.zupacademy.mateus.proposta.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 public class CarteiraDigital {
 	@Id
-	private String id;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@NotBlank
 	private String email;
-	
-	private String associadaEm;
-	
-	private String emissaor;
+
+	private LocalDateTime associadaEm;
+	@NotBlank
+	private String emissor;
 
 	@ManyToOne
 	@JoinColumn(name="cartao_id", nullable=false)
 	private Cartao cartao;
 
-	public CarteiraDigital(String id, String email, String associadaEm, String emissaor) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.associadaEm = associadaEm;
-		this.emissaor = emissaor;
+	@Deprecated
+	public CarteiraDigital(){
+
 	}
 
-	public String getId() {
+	public CarteiraDigital(String email, String emissor,Cartao cartao) {
+		super();
+		this.email = email;
+		this.associadaEm = LocalDateTime.now();
+		this.emissor = emissor;
+		this.cartao = cartao;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
@@ -36,11 +41,11 @@ public class CarteiraDigital {
 		return email;
 	}
 
-	public String getAssociadaEm() {
+	public LocalDateTime getAssociadaEm() {
 		return associadaEm;
 	}
 
-	public String getEmissaor() {
-		return emissaor;
+	public String getEmissor() {
+		return emissor;
 	}
 }
