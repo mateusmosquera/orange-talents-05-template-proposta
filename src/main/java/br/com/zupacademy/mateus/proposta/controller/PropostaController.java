@@ -10,6 +10,8 @@ import br.com.zupacademy.mateus.proposta.Client.CartoesClient;
 import br.com.zupacademy.mateus.proposta.Client.PropostaClient;
 import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoAnalise;
 import br.com.zupacademy.mateus.proposta.controller.dto.SolicitacaoResponse;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,12 @@ public class PropostaController {
 
 	private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
+	private final Tracer tracer;
+
+	public PropostaController(Tracer tracer) {
+		this.tracer = tracer;
+	}
+
 	@PostMapping
 	@Transactional
 	public ResponseEntity<PropostaDto> cadastrar(@RequestBody @Valid PropostaDto propostaDto,
@@ -57,6 +65,8 @@ public class PropostaController {
 
 		propostaRepository.save(newProp);
 
+		gerenciarPropostaJaeger(newProp);
+
 		URI uri = uriBuilder.path("/proposta/{id}").buildAndExpand(newProp.getId()).toUri();
 
 		return ResponseEntity.created(uri).body(propostaDto);
@@ -71,6 +81,16 @@ public class PropostaController {
 			throw new ApiErroException(HttpStatus.NOT_FOUND, "Proposta não encontrada");
 		}
 		return ResponseEntity.ok(optProposta.get());
+	}
+
+	public void gerenciarPropostaJaeger(Proposta newProp){
+		Span activeSpan = tracer.activeSpan();
+
+		activeSpan.setTag("user.email", newProp.getEmail());
+
+		activeSpan.setBaggageItem("user.email", newProp.getEmail());
+
+		activeSpan.log("Span e Baggage setado para o email "+newProp.getEmail()+" com sucesso");
 	}
 
 }

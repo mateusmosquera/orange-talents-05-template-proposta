@@ -69,6 +69,10 @@ public class Proposta {
 		return nome;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
 	public String getDocumento() {
 		return documento;
 	}
