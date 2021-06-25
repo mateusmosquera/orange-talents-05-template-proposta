@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.websocket.server.PathParam;
 
 import br.com.zupacademy.mateus.proposta.Client.CartoesClient;
@@ -73,7 +74,7 @@ public class PropostaController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Proposta> consultar(@PathParam("id") Long id){
+	public ResponseEntity<Proposta> consultar(@PathParam("id") @NotNull Long id){
 
 		Optional<Proposta> optProposta = propostaRepository.findById(id);
 
