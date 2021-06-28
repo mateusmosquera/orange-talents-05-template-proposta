@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import br.com.zupacademy.mateus.proposta.config.security.DocumentoEncrypter;
 import org.hibernate.validator.constraints.br.CPF;
 
 import br.com.zupacademy.mateus.proposta.model.Proposta;
@@ -51,7 +52,7 @@ public class PropostaDto {
 	}
 
 	public boolean documentoIsUnique(PropostaRepository PropostaRepository) {
-		Optional<Proposta> user = PropostaRepository.findByDocumento(documento);
+		Optional<Proposta> user = PropostaRepository.findByDocumento(DocumentoEncrypter.encriptarDocumento(this.documento));
 		if(user.isPresent()) {
 			return false;
 		}
@@ -77,5 +78,8 @@ public class PropostaDto {
 	public BigDecimal getSalario() {
 		return salario;
 	}
-	
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
 }

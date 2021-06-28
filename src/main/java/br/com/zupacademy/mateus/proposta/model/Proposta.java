@@ -8,8 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.zupacademy.mateus.proposta.config.exceptions.ApiErroException;
@@ -23,8 +26,7 @@ public class Proposta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@CPF
+
 	@NotBlank
 	private String documento;
 	
@@ -51,7 +53,7 @@ public class Proposta {
 		
 	}
 
-	public Proposta(@CPF @NotBlank String documento, @Email @NotBlank String email, @NotBlank String nome,@NotBlank String endereco,
+	public Proposta(@NotBlank String documento, @Email @NotBlank String email, @NotBlank String nome,@NotBlank String endereco,
 			@NotNull @Positive BigDecimal salario) {
 		super();
 		this.documento = documento;
@@ -108,5 +110,4 @@ public class Proposta {
 		this.idCartao = cartaoAssociado.getId();
 
 	}
-
 }
